@@ -1,0 +1,7 @@
+.idea
+
+test/
+examples/
+
+timestore.js
+timestore-min.js

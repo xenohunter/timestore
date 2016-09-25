@@ -1,0 +1,36 @@
+{
+  "name": "timestore",
+  "version": "1.0.0",
+  "description": "Multiple timers manager, especially good for games.",
+  "keywords": [
+    "game",
+    "games",
+    "timer",
+    "timers",
+    "setTimeout"
+  ],
+  "repository": "xenohunter/timestore",
+  "bugs": {
+    "url": "https://github.com/xenohunter/timestore/issues",
+    "email": "xenohunter@yandex.ru"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Phil Filippak",
+    "email": "xenohunter@yandex.ru",
+    "url": "http://xenohunter.me"
+  },
+  "main": "index.js",
+  "devDependencies": {
+    "browserify": "^13.1.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "uglify-js": "^2.7.3"
+  },
+  "scripts": {
+    "test": "mocha test/tests.js",
+    "compile": "browserify index.js -s timestore -o timestore.js",
+    "mcompile": "browserify index.js -s timestore | uglifyjs -o timestore-min.js -m",
+    "prepublish": "npm run compile && npm run mcompile"
+  }
+}
