@@ -3,5 +3,5 @@
 test/
 examples/
 
-timestore.js
-timestore.min.js
+timestore*.js
+timestore*.min.js
