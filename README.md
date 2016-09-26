@@ -79,11 +79,11 @@ The second way may seem a bit strange, but it is very useful, indeed:
     var interval = gameTimers.setInterval('someId', ohThatCallbackAgain, 200);
 
     // And you can reach your interval from the farthest corner of your code:
-    gameTimers.pauseInterval('someId'); // If you doesn't resume him, his callback won't be invoked, ever!
+    gameTimers.pauseInterval('someId');
 
-Timeouts and intervals are stored aside from each other so the same IDs can be used for two of them. Though I don't recommend to do so due to the bad readability of the code with same or similar IDs.
+Timeouts and intervals are stored aside from each other so the same IDs can be used for two of them. Though I don't recommend to do so due to the bad readability of the code with somehow doubling IDs.
 
-Be aware: **do not use numbers (and strings with just numbers in them, too) as IDs** because numbers are used as the inner standard for IDs. That behavior will be demolished in the next version (ASAP - *this is the 27th of September, the Year 2016, and the current version of **timestore** is 1.1.0*).
+**NOTE**: *do not use numbers (and strings with just numbers in them, too) as IDs* because numbers are used as the inner standard for IDs.
 
 ## API
 
@@ -154,3 +154,59 @@ Changes `Interval.delay`. If it's changed so to match a point in the past, the c
 #### Interval.getTimeLeft()
 
 Returns the time left to the next callback invocation.
+
+### Class: Timestore
+
+Syntax: `new Timestore()`.
+
+#### Timestore.setTimeout([id], callback, delay, fireBeforeClear)
+
+Returns a `Timeout` object.
+
+* *string* `id` is optional; if there is already a timeout with the same ID, it will be cleared and overwritten
+
+**NOTE**: don't use numbers as IDs.
+
+#### Timestore.clearTimeout(id), Timestore.pauseTimeout(id), Timestore.resumeTimeout(id), Timestore.resumeTimeout(id), Timestore.changeTimeoutDelay(id, newDelay), Timestore.getTimeoutTimeLeft(id)
+
+If there is a timeout with a given `id`, calls the corresponding method of that timeout. Passes the arguments, if any. Returns the return value of that method, if any.
+
+#### Timestore.setInterval([id], callback, delay, fireBeforeClear)
+
+Returns a `Interval` object.
+
+* *string* `id` is optional; if there is already an interval with the same ID, it will be cleared and overwritten
+
+**NOTE**: don't use numbers as IDs.
+
+#### Timestore.clearInterval(id), Timestore.pauseInterval(id), Timestore.resumeInterval(id), Timestore.resumeInterval(id), Timestore.changeIntervalDelay(id, newDelay), Timestore.getIntervalTimeLeft(id)
+
+If there is an interval with a given `id`, calls the corresponding method of that interval. Passes the arguments, if any. Returns the return value of that method, if any.
+
+#### Timestore.clearAll()
+
+Clears all timeouts and intervals. Resets inner ID counters to zero. Empties the current timestore. All timeouts and intervals with `fireBeforeClear` invoke their callbacks.
+
+#### Timestore.pauseAll()
+
+Pauses all timeouts and intervals without side effects.
+
+#### Timestore.resumeAll()
+
+Resumes all timeouts and intervals. For those which `Interval.delay` has been changed so to match a point in the past, the callbacks will be invoked immediately.
+
+#### Timestore.getTimeouts()
+
+Returns an array of timeout IDs.
+
+#### Timestore.hasTimeout(id)
+
+Returns `true` if there is a timeout with a given `id`. Otherwise, returns `false`.
+
+#### Timestore.getIntervals()
+
+Returns an array of interval IDs.
+
+#### Timestore.hasInterval(id)
+
+Returns `true` if there is an interval with a given `id`. Otherwise, returns `false`.
