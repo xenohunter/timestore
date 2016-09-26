@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>timestore</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!-- Compiled and minified Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atelier-forest-light.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('pre').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        });
+    </script>
+
+    <script src="../timestore.js"></script>
+
+    <script src="./environment.js"></script>
+    <script src="./examples.js"></script>
+
+    <style>
+
+        button.btn {
+            margin-bottom: 5px;
+        }
+
+        .padded {
+            padding: 0 4% 20px;
+        }
+
+        #rockets {
+            display: block;
+            width: 100%;
+            height: 350px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="page-header padded">
+        <h1>timestore<br><small>multiple timers manager, especially good for games</small></h1>
+    </div>
+
+    <div class="container-fluid padded" style="margin-top: 30px;">
+
+        <p class="lead"><b>timestore</b> is a lightweight library which replaces native <code>setTimeout</code>/<code>setInterval</code> methods. It allows you to create a store, set timers which belong to that store, and then run, clear, pause and resume them either one by one, or altogether. That makes it very useful to integrate <b>timestore</b> with <a href="http://phaser.io/news/2015/06/using-states-tutorial">game states</a> by creating a store for each state and switching between them without losing timers from other stores.</p>
+
+        <p class="lead text-center"><a href="https://github.com/xenohunter/timestore/blob/master/README.md">Docs</a> and <a href="https://github.com/xenohunter/timestore">code</a> are here!</p>
+
+        <hr>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <canvas id="rockets"></canvas>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <button id="set_timeout_0" class="btn btn-default">Set Timeout</button>
+                        <button id="clear_timeout_0" class="btn btn-default">Clear Timeout</button>
+                        <button id="toggle_timeout_0" class="btn btn-default">Toggle</button>
+                        <br>
+                        <button class="btn btn-default" disabled><span id="ms_0">0</span> ms left</button>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <button id="set_interval_1" class="btn btn-default">Set Interval</button>
+                        <button id="clear_interval_1" class="btn btn-default">Clear Interval</button>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <button id="set_intervals_2" class="btn btn-default">Set Intervals</button>
+                        <button id="clear_intervals_2" class="btn btn-default">Clear Intervals</button>
+                        <br>
+                        <button id="toggle_blue_2" class="btn btn-default" style="color: #245ccd;">Toggle Blue</button>
+                        <button id="toggle_green_2" class="btn btn-default" style="color: #00cf25;">Toggle Green</button>
+                        <button id="toggle_red_2" class="btn btn-default" style="color: #ea1f1f;">Toggle Red</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>Yellow rocket will move 2 seconds after you set a Timeout. You can clear timeout and also pause and resume it with the "Toggle" button.</p>
+                        <p>The number shows the time until launch.</p>
+                    </div>
+                </div>
+                <hr>
+
+<pre>
+var TS = new timestore.Timestore(),
+    timeout;
+
+$('#set_timeout_0').on('click', function () {
+    timeout = TS.setTimeout('0th', function () {
+        yellowRocket.accelerate();
+    }, 2000);
+});
+
+$('#clear_timeout_0').on('click', function () {
+    timeout && timeout.clear();
+});
+
+$('#toggle_timeout_0').on('click', function () {
+    timeout && timeout.toggle();
+});</pre>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>Pink rocket will move constantly after you set Interval. When you clear it, the rocket will stop.</p>
+                    </div>
+                </div>
+                <hr>
+
+<pre>
+// <-- The same TS as on the left!
+
+var interval;
+
+$('#set_interval_1').on('click', function () {
+    interval = TS.setInterval('1st', function () {
+        pinkRocket.move();
+    }, 50);
+});
+
+$('#clear_interval_1').on('click', function () {
+    interval && interval.clear();
+});</pre>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>Those rockets will move constantly after you set Intervals. They will stop when you clear Intervals.</p>
+                        <p>Also, you can toggle each rockets on and off. In this example, toggle works only when Intervals are set and not cleared.</p>
+                    </div>
+                </div>
+                <hr>
+
+<pre>
+// The method .clearAll() affects all timers.
+// So we need another "timerspace".
+var newTS = new timestore.Timestore();
+
+// Intervals with custom IDs will be overwritten.
+$('#set_intervals_2').on('click', function () {
+
+    newTS.setInterval('blue', function () {
+        blueRocket.move(1);
+    }, 50);
+
+    newTS.setInterval('green', function () {
+        greenRocket.move(2);
+    }, 50);
+
+    newTS.setInterval('red', function () {
+        redRocket.move(2);
+    }, 25);
+
+});
+
+$('#clear_intervals_2').on('click', function () {
+    newTS.clearAll();
+});
+
+$('#toggle_blue_2').on('click', function () {
+    newTS.toggleInterval('blue');
+});
+
+$('#toggle_green_2').on('click', function () {
+    newTS.toggleInterval('green');
+});
+
+$('#toggle_red_2').on('click', function () {
+    newTS.toggleInterval('red');
+});</pre>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
