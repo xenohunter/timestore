@@ -1,7 +1,7 @@
 .idea
 
+docs/
 test/
-examples/
 
 timestore*.js
 timestore*.min.js

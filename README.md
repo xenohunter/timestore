@@ -1,4 +1,4 @@
-# timestore [![npm version](https://badge.fury.io/js/timestore.svg)](https://www.npmjs.com/package/timestore) [![downloads/month](https://img.shields.io/npm/dm/timestore.svg)](https://www.npmjs.com/package/timestore)
+# timestore [![npm version](https://badge.fury.io/js/timestore.svg)](https://www.npmjs.com/package/timestore) [![downloads/month](https://img.shields.io/npm/dm/timestore.svg)](https://www.npmjs.com/package/timestore) [![PayPal donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GQ5TJ6PCRXS4Y)
 
 Manage multiple collections of timers: set, clear, pause and resume them. Use it with your [game states](http://phaser.io/news/2015/06/using-states-tutorial).
 
