@@ -28,7 +28,7 @@
     "uglify-js": "^2.7.3"
   },
   "scripts": {
-    "test": "mocha test/tests.js",
+    "test": "browserify index.js -s timestore -o test/timestore-for-test.js && mocha test/tests.js",
     "compile": "browserify index.js -s timestore -o timestore.1.1.0.js",
     "mcompile": "browserify index.js -s timestore | uglifyjs -o timestore.1.1.0.min.js -m",
     "prepublish": "npm run compile && npm run mcompile"
