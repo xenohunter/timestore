@@ -4,4 +4,4 @@ test/
 examples/
 
 timestore.js
-timestore-min.js
+timestore.min.js

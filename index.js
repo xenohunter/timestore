@@ -22,6 +22,7 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
     this.nativeTimeoutId = setTimeout(function () {
         self.callback();
         self.onClear();
+        self.burnt = true;
     }, this.delay);
 
     this.timestamp = Date.now();
@@ -29,9 +30,13 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
     this.isPaused = false;
     this.pausedAt = 0;
 
+    this.burnt = false;
+
 }
 
 Timeout.prototype.clear = function () {
+
+    if (this.burnt) return;
 
     if (this.fireBeforeClear && this.isPaused === false) {
         this.callback();
@@ -39,12 +44,13 @@ Timeout.prototype.clear = function () {
 
     clearTimeout(this.nativeTimeoutId);
     this.onClear();
+    this.burnt = true;
 
 };
 
 Timeout.prototype.pause = function () {
 
-    if (this.isPaused === true) return;
+    if (this.isPaused === true || this.burnt) return;
 
     clearTimeout(this.nativeTimeoutId);
 
@@ -57,14 +63,17 @@ Timeout.prototype.resume = function () {
 
     var self = this;
 
-    if (this.isPaused === false) return;
+    if (this.isPaused === false || this.burnt) return;
 
     this.delay = this.delay - (this.pausedAt - this.timestamp);
     if (this.delay < 0) this.delay = 0;
 
+    this.timestamp = Date.now();
+
     this.nativeTimeoutId = setTimeout(function () {
         self.callback();
         self.onClear();
+        self.burnt = true;
     }, this.delay);
 
     this.isPaused = false;
@@ -88,6 +97,16 @@ Timeout.prototype.changeDelay = function (newDelay) {
     this.delay = newDelay;
     !hasBeenPaused && this.resume();
 
+};
+
+Timeout.prototype.getTimeLeft = function () {
+    if (this.burnt) {
+        return 0;
+    } else if (this.isPaused) {
+        return this.delay - (this.pausedAt - this.timestamp);
+    } else {
+        return this.delay - (Date.now() - this.timestamp);
+    }
 };
 
 
@@ -140,6 +159,10 @@ Interval.prototype.toggle = function () {
 Interval.prototype.changeDelay = function (newDelay) {
     this.delay = newDelay;
     this.timeout.changeDelay(this.delay);
+};
+
+Interval.prototype.getTimeLeft = function () {
+    return this.timeout.getTimeLeft();
 };
 
 
@@ -202,6 +225,14 @@ Timestore.prototype.changeTimeoutDelay = function (id, newDelay) {
     id in this.timeouts && this.timeouts[id].changeDelay(newDelay);
 };
 
+Timestore.prototype.getTimeoutTimeLeft = function (id) {
+    if (id in this.timeouts) {
+        return this.timeouts[id].getTimeLeft();
+    } else {
+        return 0;
+    }
+};
+
 
 /** WRAPPERS FOR INTERVALS */
 
@@ -247,6 +278,14 @@ Timestore.prototype.toggleInterval = function (id) {
 
 Timestore.prototype.changeIntervalDelay = function (id, newDelay) {
     id in this.intervals && this.intervals[id].changeDelay(newDelay);
+};
+
+Timestore.prototype.getIntervalTimeLeft = function (id) {
+    if (id in this.intervals) {
+        return this.intervals[id].getTimeLeft();
+    } else {
+        return 0;
+    }
 };
 
 
