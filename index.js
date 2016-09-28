@@ -3,8 +3,7 @@
 
 /** PLACEHOLDER FOR onClear() FUNCTION */
 
-function none() {}
-
+function none() { }
 
 /** TIMEOUT */
 
@@ -20,6 +19,7 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
     this.onClear = onClear || none;
 
     this.nativeTimeoutId = setTimeout(function () {
+        self.log("execute");
         self.callback();
         self.onClear();
         self.burnt = true;
@@ -31,12 +31,15 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
     this.pausedAt = 0;
 
     this.burnt = false;
-
+    this.log("create");
 }
+
+Timeout.prototype.log = none;
 
 Timeout.prototype.clear = function () {
 
     if (this.burnt) return;
+    this.log("clear");
 
     if (this.fireBeforeClear && this.isPaused === false) {
         this.callback();
@@ -57,6 +60,7 @@ Timeout.prototype.pause = function () {
     this.isPaused = true;
     this.pausedAt = Date.now();
 
+    this.log("pause");
 };
 
 Timeout.prototype.resume = function () {
@@ -71,6 +75,7 @@ Timeout.prototype.resume = function () {
     this.timestamp = Date.now();
 
     this.nativeTimeoutId = setTimeout(function () {
+        self.log("execute");
         self.callback();
         self.onClear();
         self.burnt = true;
@@ -79,6 +84,7 @@ Timeout.prototype.resume = function () {
     this.isPaused = false;
     this.pausedAt = 0;
 
+    this.log("resume");
 };
 
 Timeout.prototype.toggle = function () {
