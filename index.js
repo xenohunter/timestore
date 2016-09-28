@@ -18,6 +18,7 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
 
     this.id = id || null;
     this.onClear = onClear || none;
+    this.onReject = none;
 
     this.nativeTimeoutId = setTimeout(function () {
         self.callback();
@@ -44,6 +45,7 @@ Timeout.prototype.clear = function () {
 
     clearTimeout(this.nativeTimeoutId);
     this.onClear();
+    this.onReject("Timeout is canceled");
     this.burnt = true;
 
 };
@@ -334,6 +336,14 @@ Timestore.prototype.hasInterval = function (id) {
     return (id in this.intervals);
 };
 
+/** Promise API **/
+Timestore.prototype.delay = function (delay) {
+    var self = this;
+
+    return new Promise(function (resolve, reject) {
+        self.setTimeout(resolve, delay).onReject = reject;
+    })
+}
 
 /** EXPORTING */
 
