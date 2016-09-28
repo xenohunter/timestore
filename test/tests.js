@@ -22,6 +22,14 @@ var isNode = (typeof window !== 'object'),
         return str;
     };
 
+if (false) {
+	!function () {
+		var startdate = Date.now();
+		Timeout.prototype.log = function (msg) {
+			console.log(msg, Date.now() - _startdate, this.timestamp - startdate, this.isPaused && this.pausedAt - startdate);
+		};
+	}();
+}
 
 describe('First, there:', function () {
 
@@ -263,6 +271,8 @@ describe('While using massive methods, they:', function () {
 
     it('should clear all timeouts and intervals', function (done) {
 
+        Timeout.prototype.log = function () { }; // this test will be fail if debug log is enabled
+
         var didFire = false,
             defaultCount = 5,
             checkFunction = function () {
@@ -289,6 +299,8 @@ describe('While using massive methods, they:', function () {
 
     it('should create a timeout with ID = 0 and an interval with ID = 0 after clearing all', function () {
 
+        Timeout.prototype.log = function () { }; // this test will be fail if debug log is enabled
+
         var defaultTimersCount = 5,
             timeoutToCheck,
             intervalToCheck;
@@ -311,6 +323,8 @@ describe('While using massive methods, they:', function () {
     });
 
     it('should pause all timeouts and intervals', function (done) {
+
+        Timeout.prototype.log = function () { }; // this test will be fail if debug log is enabled
 
         var didFire = false,
             defaultTimersCount = 5,
@@ -338,6 +352,8 @@ describe('While using massive methods, they:', function () {
     });
 
     it('should resume all timeouts and intervals', function (done) {
+
+        Timeout.prototype.log = function () { }; // this test will be fail if debug log is enabled
 
         var defaultCount = 5,
             mustFire = (IDs.length + defaultCount) * 2,
@@ -371,6 +387,8 @@ describe('While using massive methods, they:', function () {
     });
 
     it('should fire timeouts/intervals and skip duration between pause and resume', function (done) {
+
+        Timeout.prototype.log = function () { }; // this test will be fail if debug log is enabled
 
         var created = Date.now(),
             callCount = 2,
