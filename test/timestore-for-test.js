@@ -24,6 +24,7 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
         self.callback();
         self.onClear();
         self.burnt = true;
+        self.log('execute');
     }, this.delay);
 
     this.timestamp = Date.now();
@@ -32,6 +33,8 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
     this.pausedAt = 0;
 
     this.burnt = false;
+
+    this.log('create');
 
 }
 
@@ -47,6 +50,8 @@ Timeout.prototype.clear = function () {
     this.onClear();
     this.burnt = true;
 
+    this.log('clear');
+
 };
 
 Timeout.prototype.pause = function () {
@@ -57,6 +62,8 @@ Timeout.prototype.pause = function () {
 
     this.isPaused = true;
     this.pausedAt = Date.now();
+
+    this.log('pause');
 
 };
 
@@ -75,10 +82,13 @@ Timeout.prototype.resume = function () {
         self.callback();
         self.onClear();
         self.burnt = true;
+        self.log('execute');
     }, this.delay);
 
     this.isPaused = false;
     this.pausedAt = 0;
+
+    this.log('resume');
 
 };
 
@@ -109,6 +119,8 @@ Timeout.prototype.getTimeLeft = function () {
         return this.delay - (Date.now() - this.timestamp);
     }
 };
+
+Timeout.prototype.log = none;
 
 
 /** INTERVAL */

@@ -20,7 +20,22 @@ var isNode = (typeof window !== 'object'),
         var str = '';
         str += set.customId ? ' (custom ID)' : '';
         return str;
-    };
+    },
+
+    debug = false;
+
+
+if (debug) {
+    (function () {
+		var testsRunAt = Date.now();
+		Timeout.prototype.log = function (action) {
+			console.log(action,
+                        Date.now() - testsRunAt,
+                        this.timestamp - testsRunAt,
+                        this.isPaused && this.pausedAt - testsRunAt);
+		};
+	})();
+}
 
 
 describe('First, there:', function () {
@@ -263,6 +278,8 @@ describe('While using massive methods, they:', function () {
 
     it('should clear all timeouts and intervals', function (done) {
 
+        Timeout.prototype.log = function () {}; // This test will fail if debug log is enabled.
+
         var didFire = false,
             defaultCount = 5,
             checkFunction = function () {
@@ -289,6 +306,8 @@ describe('While using massive methods, they:', function () {
 
     it('should create a timeout with ID = 0 and an interval with ID = 0 after clearing all', function () {
 
+        Timeout.prototype.log = function () {}; // This test will fail if debug log is enabled.
+
         var defaultTimersCount = 5,
             timeoutToCheck,
             intervalToCheck;
@@ -311,6 +330,8 @@ describe('While using massive methods, they:', function () {
     });
 
     it('should pause all timeouts and intervals', function (done) {
+
+        Timeout.prototype.log = function () {}; // This test will fail if debug log is enabled.
 
         var didFire = false,
             defaultTimersCount = 5,
@@ -338,6 +359,8 @@ describe('While using massive methods, they:', function () {
     });
 
     it('should resume all timeouts and intervals', function (done) {
+
+        Timeout.prototype.log = function () {}; // This test will fail if debug log is enabled.
 
         var defaultCount = 5,
             mustFire = (IDs.length + defaultCount) * 2,
@@ -371,6 +394,8 @@ describe('While using massive methods, they:', function () {
     });
 
     it('should fire timeouts/intervals and skip duration between pause and resume', function (done) {
+
+        Timeout.prototype.log = function () {}; // This test will fail if debug log is enabled.
 
         var created = Date.now(),
             callCount = 2,
