@@ -526,3 +526,80 @@ describe('While using wrappers, they:', function () {
     });
 
 });
+
+
+describe('While calling timer methods, all of them must work:', function () {
+
+    it('with a direct call for timeouts', function (done) {
+
+        var timeout = ts.setTimeout(done, 20, true);
+
+        timeout.pause();
+        timeout.resume();
+
+        timeout.toggle();
+        timeout.toggle();
+
+        timeout.changeDelay(30);
+        assert.isNumber(timeout.getTimeLeft());
+
+        timeout.log('');
+
+        timeout.clear();
+
+    });
+
+    it('with a direct call for intervals', function (done) {
+
+        var interval = ts.setInterval(done, 20, true);
+
+        interval.pause();
+        interval.resume();
+
+        interval.toggle();
+        interval.toggle();
+
+        interval.changeDelay(30);
+        assert.isNumber(interval.getTimeLeft());
+
+        interval.clear();
+
+    });
+
+    it('with a call by ID for timeouts', function (done) {
+
+        var timeout = ts.setTimeout(done, 20, true),
+            id = timeout.id;
+
+        ts.pauseTimeout(id);
+        ts.resumeTimeout(id);
+
+        ts.toggleTimeout(id);
+        ts.toggleTimeout(id);
+
+        ts.changeTimeoutDelay(id, 30);
+        assert.isNumber(ts.getTimeoutTimeLeft(id));
+
+        ts.clearTimeout(id);
+
+    });
+
+    it('with a call by ID for intervals', function (done) {
+
+        var interval = ts.setInterval(done, 20, true),
+            id = interval.id;
+
+        ts.pauseInterval(id);
+        ts.resumeInterval(id);
+
+        ts.toggleInterval(id);
+        ts.toggleInterval(id);
+
+        ts.changeIntervalDelay(id, 30);
+        assert.isNumber(ts.getIntervalTimeLeft(id));
+
+        ts.clearInterval(id);
+
+    });
+
+});
