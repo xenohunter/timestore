@@ -425,6 +425,56 @@ describe('While using massive methods, they:', function () {
 
     });
 
+    it('should affect timeouts selectively by IDs', function (done) {
+
+        var IDs = ['a', 'b', 'c', 'd', 'e', 'f', 'g'], // Only 'f' and 'g' must fire.
+            callCount = 2,
+            checkFunction = function () {
+                callCount--;
+            };
+
+        IDs.forEach(function (id) {
+            ts.setTimeout(id, checkFunction, 20);
+        });
+
+        ts.toggleTimeouts(['f', 'g']);
+        ts.toggleTimeouts(['f', 'g']);
+        ts.pauseTimeouts(['f', 'g']);
+        ts.resumeTimeouts(['f', 'g']);
+
+        ts.clearTimeouts(['a', 'b', 'c', 'd', 'e']);
+
+        setTimeout(function () {
+            done(callCount);
+        }, 40);
+
+    });
+
+    it('should affect intervals selectively by IDs', function (done) {
+
+        var IDs = ['a', 'b', 'c', 'd', 'e', 'f', 'g'], // Only 'f' and 'g' must fire.
+            callCount = 2,
+            checkFunction = function () {
+                callCount--;
+            };
+
+        IDs.forEach(function (id) {
+            ts.setInterval(id, checkFunction, 30);
+        });
+
+        ts.toggleIntervals(['f', 'g']);
+        ts.toggleIntervals(['f', 'g']);
+        ts.pauseIntervals(['f', 'g']);
+        ts.resumeIntervals(['f', 'g']);
+
+        ts.clearIntervals(['a', 'b', 'c', 'd', 'e']);
+
+        setTimeout(function () {
+            done(callCount);
+        }, 50);
+
+    });
+
 });
 
 

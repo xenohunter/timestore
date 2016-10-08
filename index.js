@@ -1,7 +1,7 @@
 "use strict";
 
 
-/** PLACEHOLDER FOR onClear() FUNCTION */
+/** PLACEHOLDER FOR onClear() FUNCTION AND Timeout.prototype.log() METHOD */
 
 function none() {}
 
@@ -221,16 +221,40 @@ Timestore.prototype.clearTimeout = function (id) {
     id in this.timeouts && this.timeouts[id].clear();
 };
 
+Timestore.prototype.clearTimeouts = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.timeouts && this.timeouts[id].clear();
+    }, this);
+};
+
 Timestore.prototype.pauseTimeout = function (id) {
     id in this.timeouts && this.timeouts[id].pause();
+};
+
+Timestore.prototype.pauseTimeouts = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.timeouts && this.timeouts[id].pause();
+    }, this);
 };
 
 Timestore.prototype.resumeTimeout = function (id) {
     id in this.timeouts && this.timeouts[id].resume();
 };
 
+Timestore.prototype.resumeTimeouts = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.timeouts && this.timeouts[id].resume();
+    }, this);
+};
+
 Timestore.prototype.toggleTimeout = function (id) {
     id in this.timeouts && this.timeouts[id].toggle();
+};
+
+Timestore.prototype.toggleTimeouts = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.timeouts && this.timeouts[id].toggle();
+    }, this);
 };
 
 Timestore.prototype.changeTimeoutDelay = function (id, newDelay) {
@@ -276,16 +300,40 @@ Timestore.prototype.clearInterval = function (id) {
     id in this.intervals && this.intervals[id].clear();
 };
 
+Timestore.prototype.clearIntervals = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.intervals && this.intervals[id].clear();
+    }, this);
+};
+
 Timestore.prototype.pauseInterval = function (id) {
     id in this.intervals && this.intervals[id].pause();
+};
+
+Timestore.prototype.pauseIntervals = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.intervals && this.intervals[id].pause();
+    }, this);
 };
 
 Timestore.prototype.resumeInterval = function (id) {
     id in this.intervals && this.intervals[id].resume();
 };
 
+Timestore.prototype.resumeIntervals = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.intervals && this.intervals[id].resume();
+    }, this);
+};
+
 Timestore.prototype.toggleInterval = function (id) {
     id in this.intervals && this.intervals[id].toggle();
+};
+
+Timestore.prototype.toggleIntervals = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.intervals && this.intervals[id].toggle();
+    }, this);
 };
 
 Timestore.prototype.changeIntervalDelay = function (id, newDelay) {

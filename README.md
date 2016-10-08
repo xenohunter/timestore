@@ -6,9 +6,9 @@ Manage multiple collections of timers: set, clear, pause and resume them. Use it
 
     $ npm install timestore
 
-or, get a [browserified and minified version](https://cdn.rawgit.com/xenohunter/timestore/master/timestore.1.1.0.min.js).
+or, get a [browserified and minified version](https://cdn.rawgit.com/xenohunter/timestore/master/timestore.1.1.1.min.js).
 
-Also, check out [the interactive example page](https://xenohunter.github.io/timestore/).
+Also, check out the [example page](https://xenohunter.github.io/timestore/).
 
 ## Quick Guide
 
@@ -171,6 +171,10 @@ Returns a `Timeout` object.
 
 If there is a timeout with a given `id`, calls the corresponding method of that timeout. Passes the arguments, if any. Returns the return value of that method, if any.
 
+#### Timestore.clearTimeouts(idArray), Timestore.pauseTimeouts(idArray), Timestore.resumeTimeouts(idArray), Timestore.resumeTimeouts(idArray)
+
+Calls the corresponding method of all the timeouts which IDs are listed in `idArray`.
+
 #### Timestore.setInterval([id], callback, delay, fireBeforeClear)
 
 Returns a `Interval` object.
@@ -182,6 +186,10 @@ Returns a `Interval` object.
 #### Timestore.clearInterval(id), Timestore.pauseInterval(id), Timestore.resumeInterval(id), Timestore.resumeInterval(id), Timestore.changeIntervalDelay(id, newDelay), Timestore.getIntervalTimeLeft(id)
 
 If there is an interval with a given `id`, calls the corresponding method of that interval. Passes the arguments, if any. Returns the return value of that method, if any.
+
+#### Timestore.clearIntervals(idArray), Timestore.pauseIntervals(idArray), Timestore.resumeIntervals(idArray), Timestore.resumeIntervals(idArray)
+
+Calls the corresponding method of all the intervals which IDs are listed in `idArray`.
 
 #### Timestore.clearAll()
 

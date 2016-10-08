@@ -2,7 +2,7 @@
 "use strict";
 
 
-/** PLACEHOLDER FOR onClear() FUNCTION */
+/** PLACEHOLDER FOR onClear() FUNCTION AND Timeout.prototype.log() METHOD */
 
 function none() {}
 
@@ -24,6 +24,7 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
         self.callback();
         self.onClear();
         self.burnt = true;
+        self.log('execute');
     }, this.delay);
 
     this.timestamp = Date.now();
@@ -32,6 +33,8 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
     this.pausedAt = 0;
 
     this.burnt = false;
+
+    this.log('create');
 
 }
 
@@ -47,6 +50,8 @@ Timeout.prototype.clear = function () {
     this.onClear();
     this.burnt = true;
 
+    this.log('clear');
+
 };
 
 Timeout.prototype.pause = function () {
@@ -57,6 +62,8 @@ Timeout.prototype.pause = function () {
 
     this.isPaused = true;
     this.pausedAt = Date.now();
+
+    this.log('pause');
 
 };
 
@@ -75,10 +82,13 @@ Timeout.prototype.resume = function () {
         self.callback();
         self.onClear();
         self.burnt = true;
+        self.log('execute');
     }, this.delay);
 
     this.isPaused = false;
     this.pausedAt = 0;
+
+    this.log('resume');
 
 };
 
@@ -109,6 +119,8 @@ Timeout.prototype.getTimeLeft = function () {
         return this.delay - (Date.now() - this.timestamp);
     }
 };
+
+Timeout.prototype.log = none;
 
 
 /** INTERVAL */
@@ -210,16 +222,40 @@ Timestore.prototype.clearTimeout = function (id) {
     id in this.timeouts && this.timeouts[id].clear();
 };
 
+Timestore.prototype.clearTimeouts = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.timeouts && this.timeouts[id].clear();
+    }, this);
+};
+
 Timestore.prototype.pauseTimeout = function (id) {
     id in this.timeouts && this.timeouts[id].pause();
+};
+
+Timestore.prototype.pauseTimeouts = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.timeouts && this.timeouts[id].pause();
+    }, this);
 };
 
 Timestore.prototype.resumeTimeout = function (id) {
     id in this.timeouts && this.timeouts[id].resume();
 };
 
+Timestore.prototype.resumeTimeouts = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.timeouts && this.timeouts[id].resume();
+    }, this);
+};
+
 Timestore.prototype.toggleTimeout = function (id) {
     id in this.timeouts && this.timeouts[id].toggle();
+};
+
+Timestore.prototype.toggleTimeouts = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.timeouts && this.timeouts[id].toggle();
+    }, this);
 };
 
 Timestore.prototype.changeTimeoutDelay = function (id, newDelay) {
@@ -265,16 +301,40 @@ Timestore.prototype.clearInterval = function (id) {
     id in this.intervals && this.intervals[id].clear();
 };
 
+Timestore.prototype.clearIntervals = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.intervals && this.intervals[id].clear();
+    }, this);
+};
+
 Timestore.prototype.pauseInterval = function (id) {
     id in this.intervals && this.intervals[id].pause();
+};
+
+Timestore.prototype.pauseIntervals = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.intervals && this.intervals[id].pause();
+    }, this);
 };
 
 Timestore.prototype.resumeInterval = function (id) {
     id in this.intervals && this.intervals[id].resume();
 };
 
+Timestore.prototype.resumeIntervals = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.intervals && this.intervals[id].resume();
+    }, this);
+};
+
 Timestore.prototype.toggleInterval = function (id) {
     id in this.intervals && this.intervals[id].toggle();
+};
+
+Timestore.prototype.toggleIntervals = function (idArray) {
+    idArray.forEach(function (id) {
+        id in this.intervals && this.intervals[id].toggle();
+    }, this);
 };
 
 Timestore.prototype.changeIntervalDelay = function (id, newDelay) {
