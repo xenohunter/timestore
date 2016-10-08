@@ -119,6 +119,302 @@ describe('While using timeouts, they:', function () {
 
         });
 
+        it('should be paused, delay-changed, resumed and fire in the time calculated from the initial timestamp' + details(set), function (done) {
+
+            var created = Date.now(),
+                mustFireIn = 120, // beforePause + pause + [90-60=30] + afterPause
+                timeout = ts.setTimeout(set.customId, function () {
+                    var distance = Date.now() - created;
+                    if (distance > mustFireIn - 5 && distance < mustFireIn + 5) {
+                        done();
+                    }
+                }, 60);
+
+            setTimeout(function () {
+                timeout.pause();
+                timeout.changeDelay(90);
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 60);
+
+        });
+
+        it('should be [paused, delay-changed, resumed]x2 and fire in the time calculated from the initial timestamp' + details(set), function (done) {
+
+            var created = Date.now(),
+                mustFireIn = 210, // beforePause1 + pause1 + [120-90=30] + betweenPauses + pause2 + [150-120=30] + afterPause2
+                timeout = ts.setTimeout(set.customId, function () {
+                    var distance = Date.now() - created;
+                    if (distance > mustFireIn - 5 && distance < mustFireIn + 5) {
+                        done();
+                    }
+                }, 90);
+
+            setTimeout(function () {
+                timeout.pause();
+                timeout.changeDelay(120);
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 60);
+
+            setTimeout(function () {
+                timeout.pause();
+                timeout.changeDelay(150);
+            }, 90);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 120);
+
+        });
+
+        it('should be [paused, delay-changed, resumed]x3 and fire in the time calculated from the initial timestamp' + details(set), function (done) {
+
+            var created = Date.now(),
+                mustFireIn = 270, // beforePause1 + pause1 + [120-90=30] + betweenPauses + pause2 + [150-120=30] + afterPause2
+                timeout = ts.setTimeout(set.customId, function () {
+                    var distance = Date.now() - created;
+                    if (distance > mustFireIn - 5 && distance < mustFireIn + 5) {
+                        done();
+                    }
+                }, 90);
+
+            setTimeout(function () {
+                timeout.pause();
+                timeout.changeDelay(120);
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 60);
+
+            setTimeout(function () {
+                timeout.pause();
+                timeout.changeDelay(150);
+            }, 90);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 120);
+
+            setTimeout(function () {
+                timeout.pause();
+                timeout.changeDelay(180);
+            }, 150);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 180);
+
+        });
+
+        it('should be paused, resumed, delay-changed and fire in the time calculated from the initial timestamp' + details(set), function (done) {
+
+            var created = Date.now(),
+                mustFireIn = 120, // beforePause + pause + [90-60=30] + afterPause
+                timeout = ts.setTimeout(set.customId, function () {
+                    var distance = Date.now() - created;
+                    if (distance > mustFireIn - 5 && distance < mustFireIn + 5) {
+                        done();
+                    }
+                }, 60);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+                timeout.changeDelay(90);
+            }, 60);
+
+        });
+
+        it('should be [paused, resumed, delay-changed]x2 and fire in the time calculated from the initial timestamp' + details(set), function (done) {
+
+            var created = Date.now(),
+                mustFireIn = 210, // beforePause1 + pause1 + [120-90=30] + betweenPauses + pause2 + [150-120=30] + afterPause2
+                timeout = ts.setTimeout(set.customId, function () {
+                    var distance = Date.now() - created;
+                    if (distance > mustFireIn - 5 && distance < mustFireIn + 5) {
+                        done();
+                    }
+                }, 90);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+                timeout.changeDelay(120);
+            }, 60);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 90);
+
+            setTimeout(function () {
+                timeout.resume();
+                timeout.changeDelay(150);
+            }, 120);
+
+        });
+
+        it('should be [paused, resumed, delay-changed]x3 and fire in the time calculated from the initial timestamp' + details(set), function (done) {
+
+            var created = Date.now(),
+                mustFireIn = 270, // beforePause1 + pause1 + [120-90=30] + betweenPauses + pause2 + [150-120=30] + afterPause2
+                timeout = ts.setTimeout(set.customId, function () {
+                    var distance = Date.now() - created;
+                    if (distance > mustFireIn - 5 && distance < mustFireIn + 5) {
+                        done();
+                    }
+                }, 90);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+                timeout.changeDelay(120);
+            }, 60);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 90);
+
+            setTimeout(function () {
+                timeout.resume();
+                timeout.changeDelay(150);
+            }, 120);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 150);
+
+            setTimeout(function () {
+                timeout.resume();
+                timeout.changeDelay(180);
+            }, 180);
+
+        });
+
+        it('should return the right estimated time when paused' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(set.customId, function () {}, 1130);
+
+            setTimeout(function () {
+                var estimated;
+                timeout.pause();
+                estimated = timeout.getTimeLeft();
+                done((estimated > 1095 && estimated < 1105) ? null : estimated);
+            }, 30);
+
+        });
+
+        it('should return the right estimated time when paused and measured later' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(set.customId, function () {}, 1130);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 30);
+
+            setTimeout(function () {
+                var estimated = timeout.getTimeLeft();
+                done((estimated > 1095 && estimated < 1105) ? null : estimated);
+            }, 50);
+
+        });
+
+        it('should return the right estimated time when paused and resumed' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(set.customId, function () {}, 1130);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 30);
+
+            setTimeout(function () {
+                var estimated;
+                timeout.resume();
+                estimated = timeout.getTimeLeft();
+                done((estimated > 1095 && estimated < 1105) ? null : estimated);
+            }, 50);
+
+        });
+
+        it('should return the right estimated time when paused, resumed and measured later' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(set.customId, function () {}, 1130);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 50);
+
+            setTimeout(function () {
+                var estimated = timeout.getTimeLeft();
+                done((estimated > 1065 && estimated < 1075) ? null : estimated);
+            }, 80);
+
+        });
+
+        it('should return the right estimated time when paused, resumed and paused again' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(set.customId, function () {}, 1130);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 50);
+
+            setTimeout(function () {
+                var estimated;
+                timeout.pause();
+                estimated = timeout.getTimeLeft();
+                done((estimated > 1065 && estimated < 1075) ? null : estimated);
+            }, 80);
+
+        });
+
+        it('should return the right estimated time when paused, resumed, paused again and resumed again' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(set.customId, function () {}, 1130);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 30);
+
+            setTimeout(function () {
+                timeout.resume();
+            }, 50);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 80);
+
+            setTimeout(function () {
+                var estimated;
+                timeout.resume();
+                estimated = timeout.getTimeLeft();
+                done((estimated > 1065 && estimated < 1075) ? null : estimated);
+            }, 110);
+
+        });
+
     });
 
     it('should not fire twice if ID was overwritten', function (done) {
@@ -266,6 +562,56 @@ describe('While changing timeout delay, it:', function () {
             setTimeout(function () {
                 timeout.changeDelay(20);
             }, 30);
+
+        });
+
+        it('should return the right estimated time when paused and delay-changed' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(function () {}, 1000);
+
+            setTimeout(function () {
+                var estimated;
+                timeout.pause();
+                timeout.changeDelay(1200);
+                estimated = timeout.getTimeLeft();
+                done((estimated > 995 && estimated < 1005) ? null : estimated);
+            }, 200);
+
+        });
+
+        it('should return the right estimated time when paused, resumed and delay-changed' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(function () {}, 1000);
+
+            setTimeout(function () {
+                timeout.pause();
+            }, 200);
+
+            setTimeout(function () {
+                var estimated;
+                timeout.resume();
+                timeout.changeDelay(1200);
+                estimated = timeout.getTimeLeft();
+                done((estimated > 995 && estimated < 1005) ? null : estimated);
+            }, 300);
+
+        });
+
+        it('should return the right estimated time when paused, delay-changed and resumed' + details(set), function (done) {
+
+            var timeout = ts.setTimeout(function () {}, 1000);
+
+            setTimeout(function () {
+                timeout.pause();
+                timeout.changeDelay(1200);
+            }, 200);
+
+            setTimeout(function () {
+                var estimated;
+                timeout.resume();
+                estimated = timeout.getTimeLeft();
+                done((estimated > 995 && estimated < 1005) ? null : estimated);
+            }, 300);
 
         });
 

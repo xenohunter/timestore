@@ -26,10 +26,11 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
         self.log('execute');
     }, this.delay);
 
-    this.timestamp = Date.now();
-
     this.isPaused = false;
     this.pausedAt = 0;
+    this.resumedAt = Date.now();
+
+    this.cumulativeWork = 0;
 
     this.burnt = false;
 
@@ -68,14 +69,17 @@ Timeout.prototype.pause = function () {
 
 Timeout.prototype.resume = function () {
 
-    var self = this;
+    var self = this,
+        lastWork;
 
     if (this.isPaused === false || this.burnt) return;
 
-    this.delay = this.delay - (this.pausedAt - this.timestamp);
-    if (this.delay < 0) this.delay = 0;
+    lastWork = this.pausedAt - this.resumedAt;
 
-    this.timestamp = Date.now();
+    this.delay -= lastWork;
+    if (this.delay < 0) {
+        this.delay = 0;
+    }
 
     this.nativeTimeoutId = setTimeout(function () {
         self.callback();
@@ -85,7 +89,9 @@ Timeout.prototype.resume = function () {
     }, this.delay);
 
     this.isPaused = false;
-    this.pausedAt = 0;
+    this.resumedAt = Date.now();
+
+    this.cumulativeWork += lastWork;
 
     this.log('resume');
 
@@ -104,7 +110,7 @@ Timeout.prototype.changeDelay = function (newDelay) {
     var hasBeenPaused = this.isPaused;
 
     !hasBeenPaused && this.pause();
-    this.delay = newDelay;
+    this.delay = newDelay - this.cumulativeWork;
     !hasBeenPaused && this.resume();
 
 };
@@ -113,9 +119,9 @@ Timeout.prototype.getTimeLeft = function () {
     if (this.burnt) {
         return 0;
     } else if (this.isPaused) {
-        return this.delay - (this.pausedAt - this.timestamp);
+        return this.delay - (this.pausedAt - this.resumedAt);
     } else {
-        return this.delay - (Date.now() - this.timestamp);
+        return this.delay - (Date.now() - this.resumedAt);
     }
 };
 
