@@ -648,24 +648,39 @@ describe('While passing arguments to timers, they:', function () {
         var interval = ts.setInterval(function () {
             interval.clear();
             if (this.test() === 123) done();
-        }, 20);
-        interval.setThis(testThis);
+        }, 20).setThis(testThis);
     });
 
     it('should work with intervals via .callWith() method', function (done) {
         var interval = ts.setInterval(function (t1, t2) {
             interval.clear();
             if (t1 === testOne && t2 === testTwo) done();
-        }, 20);
-        interval.callWith(testOne, testTwo);
+        }, 20).callWith(testOne, testTwo);
     });
 
     it('should work with intervals via .applyWith() method', function (done) {
         var interval = ts.setInterval(function (t1, t2) {
             interval.clear();
             if (t1 === testOne && t2 === testTwo) done();
-        }, 20);
-        interval.applyWith([testOne, testTwo]);
+        }, 20).applyWith([testOne, testTwo]);
+    });
+
+});
+
+
+describe('While using chaining, it', function () {
+
+    it('should work with timeouts', function (done) {
+        ts.setTimeout(function (a) {
+            if (a === 5) done();
+        }, 20).callWith(3).applyWith([5]).pause().resume().changeDelay(30).toggle().toggle();
+    });
+
+    it('should work with intervals', function (done) {
+        var interval = ts.setInterval(function (a) {
+            interval.clear();
+            if (a === 5) done();
+        }, 20).callWith(3).applyWith([5]).pause().resume().changeDelay(30).toggle().toggle();
     });
 
 });

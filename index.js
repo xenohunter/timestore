@@ -43,14 +43,17 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
 
 Timeout.prototype.setThis = function (thisArg) {
     this.thisArg = thisArg || null;
+    return this;
 };
 
 Timeout.prototype.callWith = function () {
     this.withArgs = Array.prototype.slice.call(arguments);
+    return this;
 };
 
 Timeout.prototype.applyWith = function (args) {
     this.withArgs = args || [];
+    return this;
 };
 
 Timeout.prototype.clear = function () {
@@ -79,6 +82,8 @@ Timeout.prototype.pause = function () {
     this.pausedAt = Date.now();
 
     this.log('pause');
+
+    return this;
 
 };
 
@@ -110,14 +115,20 @@ Timeout.prototype.resume = function () {
 
     this.log('resume');
 
+    return this;
+
 };
 
 Timeout.prototype.toggle = function () {
+
     if (this.isPaused) {
         this.resume();
     } else {
         this.pause();
     }
+
+    return this;
+
 };
 
 Timeout.prototype.changeDelay = function (newDelay) {
@@ -127,6 +138,8 @@ Timeout.prototype.changeDelay = function (newDelay) {
     !hasBeenPaused && this.pause();
     this.delay = newDelay - this.cumulativeWork;
     !hasBeenPaused && this.resume();
+
+    return this;
 
 };
 
@@ -170,14 +183,17 @@ function Interval(callback, delay, fireBeforeClear, id, onClear) {
 
 Interval.prototype.setThis = function (thisArg) {
     this.thisArg = thisArg || null;
+    return this;
 };
 
 Interval.prototype.callWith = function () {
     this.withArgs = Array.prototype.slice.call(arguments);
+    return this;
 };
 
 Interval.prototype.applyWith = function (args) {
     this.withArgs = args || [];
+    return this;
 };
 
 Interval.prototype.clear = function () {
@@ -194,19 +210,23 @@ Interval.prototype.clear = function () {
 
 Interval.prototype.pause = function () {
     this.timeout.pause();
+    return this;
 };
 
 Interval.prototype.resume = function () {
     this.timeout.resume();
+    return this;
 };
 
 Interval.prototype.toggle = function () {
     this.timeout.toggle();
+    return this;
 };
 
 Interval.prototype.changeDelay = function (newDelay) {
     this.delay = newDelay;
     this.timeout.changeDelay(this.delay);
+    return this;
 };
 
 Interval.prototype.getTimeLeft = function () {

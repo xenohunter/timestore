@@ -97,6 +97,8 @@ Syntax: `new Timeout(callback, delay, [fireBeforeClear], [id], [onClear])`. The 
 * *string* `id` is used by Timestore class to know all timeouts by "name"
 * *function* `onClear` is called when a timeout ends or is explicitly cleared (it is used to remove timeouts from the store)
 
+All methods return `this` and therefore **can be chained** (except for `.clear()` and those which return exact values, like `.getTimeLeft()`).
+
 #### Timeout.setThis(thisArg)
 
 Sets `this` context for `callback`.
@@ -142,6 +144,8 @@ Syntax: `new Interval(callback, delay, [fireBeforeClear], [id], [onClear])`. The
 * *boolean* `fireBeforeClear` forces the callback to be called if an interval is explicitly cleared
 * *string* `id` is used by Timestore class to know all intervals by "name"
 * *function* `onClear` is called when an interval is explicitly cleared (it is used to remove intervals from the store)
+
+All methods return `this` and therefore **can be chained** (except for `.clear()` and those which return exact values, like `.getTimeLeft()`).
 
 #### Interval.setThis(thisArg)
 
