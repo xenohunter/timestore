@@ -97,6 +97,18 @@ Syntax: `new Timeout(callback, delay, [fireBeforeClear], [id], [onClear])`. The 
 * *string* `id` is used by Timestore class to know all timeouts by "name"
 * *function* `onClear` is called when a timeout ends or is explicitly cleared (it is used to remove timeouts from the store)
 
+#### Timeout.setThis(thisArg)
+
+Sets `this` context for `callback`.
+
+#### Timeout.callWith(arg1, arg2, ...)
+
+Saves arguments to pass them into `callback` while it's invoked. Rewrites old arguments if they exist.
+
+#### Timeout.applyWith(args)
+
+Saves `args` as arguments to pass them into `callback` while it's invoked. Rewrites old arguments if they exist.
+
 #### Timeout.clear()
 
 Simply clears the timeout. If `Timeout.fireBeforeClear` is set to `true` its callback will be invoked.
@@ -130,6 +142,18 @@ Syntax: `new Interval(callback, delay, [fireBeforeClear], [id], [onClear])`. The
 * *boolean* `fireBeforeClear` forces the callback to be called if an interval is explicitly cleared
 * *string* `id` is used by Timestore class to know all intervals by "name"
 * *function* `onClear` is called when an interval is explicitly cleared (it is used to remove intervals from the store)
+
+#### Interval.setThis(thisArg)
+
+Sets `this` context for `callback`.
+
+#### Interval.callWith(arg1, arg2, ...)
+
+Saves arguments to pass them into `callback` while it's invoked (every time). Rewrites old arguments if they exist.
+
+#### Interval.applyWith(args)
+
+Saves `args` as arguments to pass them into `callback` while it's invoked (every time). Rewrites old arguments if they exist.
 
 #### Interval.clear()
 

@@ -19,8 +19,11 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
     this.id = id || null;
     this.onClear = onClear || none;
 
+    this.thisArg = null;
+    this.withArgs = [];
+
     this.nativeTimeoutId = setTimeout(function () {
-        self.callback();
+        self.callback.apply(self.thisArg, self.withArgs);
         self.onClear();
         self.burnt = true;
         self.log('execute');
@@ -38,12 +41,24 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
 
 }
 
+Timeout.prototype.setThis = function (thisArg) {
+    this.thisArg = thisArg || null;
+};
+
+Timeout.prototype.callWith = function () {
+    this.withArgs = Array.prototype.slice.call(arguments);
+};
+
+Timeout.prototype.applyWith = function (args) {
+    this.withArgs = args || [];
+};
+
 Timeout.prototype.clear = function () {
 
     if (this.burnt) return;
 
     if (this.fireBeforeClear && this.isPaused === false) {
-        this.callback();
+        this.callback.apply(this.thisArg, this.withArgs);
     }
 
     clearTimeout(this.nativeTimeoutId);
@@ -82,7 +97,7 @@ Timeout.prototype.resume = function () {
     }
 
     this.nativeTimeoutId = setTimeout(function () {
-        self.callback();
+        self.callback.apply(self.thisArg, self.withArgs);
         self.onClear();
         self.burnt = true;
         self.log('execute');
@@ -141,20 +156,35 @@ function Interval(callback, delay, fireBeforeClear, id, onClear) {
     this.id = id || null;
     this.onClear = onClear || none;
 
+    this.thisArg = null;
+    this.withArgs = [];
+
     this.run = function () {
         self.timeout = new Timeout(self.run.bind(self), self.delay);
-        self.callback();
+        self.callback.apply(self.thisArg, self.withArgs);
     };
 
     this.timeout = new Timeout(this.run.bind(this), this.delay);
 
 }
 
+Interval.prototype.setThis = function (thisArg) {
+    this.thisArg = thisArg || null;
+};
+
+Interval.prototype.callWith = function () {
+    this.withArgs = Array.prototype.slice.call(arguments);
+};
+
+Interval.prototype.applyWith = function (args) {
+    this.withArgs = args || [];
+};
+
 Interval.prototype.clear = function () {
 
     // To avoid a leak from `this.run` which is an actual callback passed to `this.timeout`.
     if (this.fireBeforeClear && this.timeout.isPaused === false) {
-        this.callback();
+        this.callback.apply(this.thisArg, this.withArgs);
     }
 
     this.timeout.clear();

@@ -20,8 +20,11 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
     this.id = id || null;
     this.onClear = onClear || none;
 
+    this.thisArg = null;
+    this.withArgs = [];
+
     this.nativeTimeoutId = setTimeout(function () {
-        self.callback();
+        self.callback.apply(self.thisArg, self.withArgs);
         self.onClear();
         self.burnt = true;
         self.log('execute');
@@ -39,12 +42,27 @@ function Timeout(callback, delay, fireBeforeClear, id, onClear) {
 
 }
 
+Timeout.prototype.setThis = function (thisArg) {
+    this.thisArg = thisArg || null;
+    return this;
+};
+
+Timeout.prototype.callWith = function () {
+    this.withArgs = Array.prototype.slice.call(arguments);
+    return this;
+};
+
+Timeout.prototype.applyWith = function (args) {
+    this.withArgs = args || [];
+    return this;
+};
+
 Timeout.prototype.clear = function () {
 
     if (this.burnt) return;
 
     if (this.fireBeforeClear && this.isPaused === false) {
-        this.callback();
+        this.callback.apply(this.thisArg, this.withArgs);
     }
 
     clearTimeout(this.nativeTimeoutId);
@@ -66,6 +84,8 @@ Timeout.prototype.pause = function () {
 
     this.log('pause');
 
+    return this;
+
 };
 
 Timeout.prototype.resume = function () {
@@ -83,7 +103,7 @@ Timeout.prototype.resume = function () {
     }
 
     this.nativeTimeoutId = setTimeout(function () {
-        self.callback();
+        self.callback.apply(self.thisArg, self.withArgs);
         self.onClear();
         self.burnt = true;
         self.log('execute');
@@ -96,14 +116,20 @@ Timeout.prototype.resume = function () {
 
     this.log('resume');
 
+    return this;
+
 };
 
 Timeout.prototype.toggle = function () {
+
     if (this.isPaused) {
         this.resume();
     } else {
         this.pause();
     }
+
+    return this;
+
 };
 
 Timeout.prototype.changeDelay = function (newDelay) {
@@ -113,6 +139,8 @@ Timeout.prototype.changeDelay = function (newDelay) {
     !hasBeenPaused && this.pause();
     this.delay = newDelay - this.cumulativeWork;
     !hasBeenPaused && this.resume();
+
+    return this;
 
 };
 
@@ -142,20 +170,38 @@ function Interval(callback, delay, fireBeforeClear, id, onClear) {
     this.id = id || null;
     this.onClear = onClear || none;
 
+    this.thisArg = null;
+    this.withArgs = [];
+
     this.run = function () {
         self.timeout = new Timeout(self.run.bind(self), self.delay);
-        self.callback();
+        self.callback.apply(self.thisArg, self.withArgs);
     };
 
     this.timeout = new Timeout(this.run.bind(this), this.delay);
 
 }
 
+Interval.prototype.setThis = function (thisArg) {
+    this.thisArg = thisArg || null;
+    return this;
+};
+
+Interval.prototype.callWith = function () {
+    this.withArgs = Array.prototype.slice.call(arguments);
+    return this;
+};
+
+Interval.prototype.applyWith = function (args) {
+    this.withArgs = args || [];
+    return this;
+};
+
 Interval.prototype.clear = function () {
 
     // To avoid a leak from `this.run` which is an actual callback passed to `this.timeout`.
     if (this.fireBeforeClear && this.timeout.isPaused === false) {
-        this.callback();
+        this.callback.apply(this.thisArg, this.withArgs);
     }
 
     this.timeout.clear();
@@ -165,19 +211,23 @@ Interval.prototype.clear = function () {
 
 Interval.prototype.pause = function () {
     this.timeout.pause();
+    return this;
 };
 
 Interval.prototype.resume = function () {
     this.timeout.resume();
+    return this;
 };
 
 Interval.prototype.toggle = function () {
     this.timeout.toggle();
+    return this;
 };
 
 Interval.prototype.changeDelay = function (newDelay) {
     this.delay = newDelay;
     this.timeout.changeDelay(this.delay);
+    return this;
 };
 
 Interval.prototype.getTimeLeft = function () {

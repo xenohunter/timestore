@@ -620,6 +620,57 @@ describe('While changing timeout delay, it:', function () {
 });
 
 
+describe('While passing arguments to timers, they:', function () {
+
+    var testThis = { test: function () { return 123; } },
+        testOne = { a: 1 },
+        testTwo = { b: 2 };
+
+    it('should have the right context in timeouts', function (done) {
+        ts.setTimeout(function () {
+            if (this.test() === 123) done();
+        }, 20).setThis(testThis);
+    });
+
+    it('should work with timeouts via .callWith() method', function (done) {
+        ts.setTimeout(function (t1, t2) {
+            if (t1 === testOne && t2 === testTwo) done();
+        }, 20).callWith(testOne, testTwo);
+    });
+
+    it('should work with timeouts via .applyWith() method', function (done) {
+        ts.setTimeout(function (t1, t2) {
+            if (t1 === testOne && t2 === testTwo) done();
+        }, 20).applyWith([testOne, testTwo]);
+    });
+
+    it('should have the right context in intervals', function (done) {
+        var interval = ts.setInterval(function () {
+            interval.clear();
+            if (this.test() === 123) done();
+        }, 20);
+        interval.setThis(testThis);
+    });
+
+    it('should work with intervals via .callWith() method', function (done) {
+        var interval = ts.setInterval(function (t1, t2) {
+            interval.clear();
+            if (t1 === testOne && t2 === testTwo) done();
+        }, 20);
+        interval.callWith(testOne, testTwo);
+    });
+
+    it('should work with intervals via .applyWith() method', function (done) {
+        var interval = ts.setInterval(function (t1, t2) {
+            interval.clear();
+            if (t1 === testOne && t2 === testTwo) done();
+        }, 20);
+        interval.applyWith([testOne, testTwo]);
+    });
+
+});
+
+
 describe('While using massive methods, they:', function () {
 
     it('should clear all timeouts and intervals', function (done) {
