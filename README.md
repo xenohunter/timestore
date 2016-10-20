@@ -6,7 +6,7 @@ Manage multiple collections of timers: set, clear, pause and resume them. Use it
 
     $ npm install timestore
 
-or, get a [browserified and minified version](https://cdn.rawgit.com/xenohunter/timestore/master/timestore.1.1.1.min.js).
+or, get a [browserified and minified version](https://cdn.rawgit.com/xenohunter/timestore/master/timestore.1.2.0.min.js).
 
 Also, check out the [example page](https://xenohunter.github.io/timestore/).
 
@@ -80,6 +80,24 @@ The second way may seem a bit strange, but it is very useful, indeed:
 
     // And you can reach your interval from the farthest corner of your code:
     gameTimers.pauseInterval('someId');
+
+In the standard, there is an opportunity to pass optional arguments in the native method: `setTimeout(callback, delay, optArg1, optArg2)`. The syntax in timestore is different but powerful. There are two ways to pass optional arguments:
+
+    var timeout = gameTimers.setTimeout(callback, 50);
+    timeout.callWith(arg1, arg2, arg3); // You can choose between this...
+    timeout.applyWith([arg1, arg2, arg3]); // ...and this.
+
+And there's the third one which allows to set `this` context for the callback:
+
+    var timeout = gameTimers.setTimeout(someObj.someMethod, 50);
+    timeout.setThis(someObj);
+
+All three methods work for intervals, too.
+
+You also can use chaining for more natural code:
+
+    var interval = gameTimers.setInterval(callback, 50).callWith('give', 'drain').setThis(someObject);
+    interval.applyWith(['drain', 'gain']); // You can always rewrite optional arguments.
 
 Timeouts and intervals are stored aside from each other so the same IDs can be used for two of them. Though I don't recommend to do so due to the bad readability of the code with somehow doubling IDs.
 
